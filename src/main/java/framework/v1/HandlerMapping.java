@@ -9,6 +9,7 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 /**
  * @ClassName HandlerMapping
@@ -18,7 +19,7 @@ import java.util.Map;
  * @Version V1.0
  **/
 public class HandlerMapping {
-    private String url;
+    private Pattern url;
     private Method method;
     private Object controller;
     private Class<?>[] paramTypes;
@@ -35,7 +36,7 @@ public class HandlerMapping {
     //参数名作为key，参数位置（下标）作为value
     private Map<String,Integer> paramIndexMapping;
 
-    public String getUrl() {
+    public Pattern getUrl() {
         return url;
     }
 
@@ -47,7 +48,7 @@ public class HandlerMapping {
         return controller;
     }
 
-    public HandlerMapping(String url, Method method, Object controller) {
+    public HandlerMapping(Pattern url, Method method, Object controller) {
         this.url = url;
         this.method = method;
         this.controller = controller;

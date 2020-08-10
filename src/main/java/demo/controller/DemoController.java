@@ -19,7 +19,7 @@ import java.io.IOException;
 @RequestMapping("/demo")
 public class DemoController {
 
-    @RequestMapping("/add")
+    @RequestMapping("/add.*")
     public void add(HttpServletRequest req, HttpServletResponse resp,
                     @RequestParam("a") Integer a , @RequestParam("b") Integer b){
         try {

@@ -6,6 +6,7 @@ import framework.Annotation.RequestMapping;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 /**
  * @ClassName InitHandlerMapping
@@ -42,8 +43,9 @@ public class InitHandlerMapping {
                 if(!method.isAnnotationPresent(RequestMapping.class)){continue;}
                 RequestMapping requestMapping = method.getAnnotation(RequestMapping.class);
                 String url = ("/" + baseUrl + "/" +requestMapping.value()).replaceAll("/+","/");
-                handlerMappings.add(new HandlerMapping(url,method,entry.getValue()));
-                System.out.println("Mapped:" + url + "," + method);
+                Pattern pattern = Pattern.compile(url);
+                handlerMappings.add(new HandlerMapping(pattern,method,entry.getValue()));
+                System.out.println("Mapping:" + pattern + "," + method);
             }
 
         }

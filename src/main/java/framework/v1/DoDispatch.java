@@ -10,6 +10,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
 
 /**
  * @ClassName DoDispatch
@@ -40,11 +41,16 @@ public class DoDispatch {
             int index = handlerMapping.getParamIndexMapping().get(param.getKey());
             paramValues[index] = convert(paramTypes[index], value);
         }
-        int reqIndex = handlerMapping.getParamIndexMapping().get(HttpServletRequest.class.getName());
-        paramValues[reqIndex] = req;
 
-        int respIndex = handlerMapping.getParamIndexMapping().get(HttpServletResponse.class.getName());
-        paramValues[respIndex] = resp;
+        //此处两个if解决了Controller方法中不传入HttpServletRequest和HttpServletResponse，只传入参数是报错的情况
+        if(handlerMapping.getParamIndexMapping().containsKey(HttpServletRequest.class.getName())){
+            int reqIndex = handlerMapping.getParamIndexMapping().get(HttpServletRequest.class.getName());
+            paramValues[reqIndex] = req;
+        }
+        if(handlerMapping.getParamIndexMapping().containsKey(HttpServletResponse.class.getName())) {
+            int respIndex = handlerMapping.getParamIndexMapping().get(HttpServletResponse.class.getName());
+            paramValues[respIndex] = resp;
+        }
 
         handlerMapping.getMethod().invoke(handlerMapping.getController(),paramValues);
     }
@@ -65,9 +71,10 @@ public class DoDispatch {
         }
 
         for (HandlerMapping mapping : handlerMappings) {
-            if(mapping.getUrl().equals(url)){
-                return mapping;
-            }
+            Matcher matcher = mapping.getUrl().matcher(url);
+            if(!matcher.matches()){continue;}
+            return mapping;
+
         }
         return null;
     }
